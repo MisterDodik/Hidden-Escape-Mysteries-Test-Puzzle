@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class OnHexagonClick : MonoBehaviour
 {
+    //rotation duration
     private float duration = 0.5f;
 
     SpriteRenderer spriteRenderer;
@@ -21,6 +22,7 @@ public class OnHexagonClick : MonoBehaviour
     }
     IEnumerator RotateOverTime()
     {
+        // disabling surrounding colliders
         selfCollider.enabled = false;
 
         Collider2D[] surroundingPaths = Physics2D.OverlapCircleAll(transform.position, 1, 64);
@@ -31,6 +33,7 @@ public class OnHexagonClick : MonoBehaviour
         }
 
 
+        // hexagon rotation
         float elapsedTime = 0f;   
 
         Quaternion currentRotation = transform.localRotation;
@@ -46,6 +49,7 @@ public class OnHexagonClick : MonoBehaviour
         transform.localRotation = endRotation;
 
 
+        // re-enabling surrounding colliders
         selfCollider.enabled = true;
 
         foreach (BoxCollider2D item in surroundingPaths)

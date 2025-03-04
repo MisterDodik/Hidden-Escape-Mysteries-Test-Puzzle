@@ -5,7 +5,7 @@ using UnityEngine;
 public class HexagonPuzzleManager : MonoBehaviour
 {
     [SerializeField] GameObject hexagonPrefab;
-    [SerializeField] Transform hexagonParent;
+    [SerializeField] Transform hexagonParent;       // parent of all hexagons
     [SerializeField] GameObject trianglePrefab;
 
     [SerializeField] GameObject pathPrefab;
@@ -16,6 +16,7 @@ public class HexagonPuzzleManager : MonoBehaviour
     public Sprite hexagonShineSprite;
     public Sprite defaultHexagonSprite;
 
+    // end screen
     [SerializeField] Animator animator;
     int winCondition = 18;
     [HideInInspector] int gameProgress = 0;
@@ -49,9 +50,11 @@ public class HexagonPuzzleManager : MonoBehaviour
             new float[] { -3, -1, 1, 3 },   // Y = -1.775
             new float[] { -2, 0, 2 }        // Y = -3.47
         };
+
+        // from 0 to 5, representing angles of triangles (0 is right, 3 is left etc)
         float[][] trianglePositions = new float[][]
         {
-            new float[] { 0, 5 },       
+            new float[] { 0, 5 },              
             new float[] { 0, 1, 4 },
             new float[] { 0, 4 },
 
@@ -75,6 +78,7 @@ public class HexagonPuzzleManager : MonoBehaviour
             new float[] { 0 },
         };
 
+        // spawning hexagons and triangles
         for (int i = 0, j=0; i < hexagonPositions.Length; i++)
         {
             float y = yPositionsHor[i];
@@ -92,16 +96,13 @@ public class HexagonPuzzleManager : MonoBehaviour
                 }
                 j++;
 
-            }
-
-            
+            }       
         }
 
         
-        // x-coordinates for each path
-        float[][] pathPositionsHor = new float[][]
+        // Spawning paths
+        float[][] pathPositionsHor = new float[][]            //rot.z = 0 ie horizontal paths
         {
-            //rot.z = 0
             new float[] { -1.07f, 0.93f },       // Y = 3.32
             new float[] { -2.07f, -0.07f, 1.93f },   // Y = 1.624
             new float[] { -3.07f, -1.07f, 0.93f, 2.93f },   // Y = -0.07
@@ -124,7 +125,6 @@ public class HexagonPuzzleManager : MonoBehaviour
         float[] yPositionsAng = { 2.4f, 0.77f, -0.95f, -2.6f }; // corresponding Y values
         float[][] pathPositionsAng = new float[][]
         {
-
             //rot.z = 60
             new float[] { -2.6f, -0.58f, 1.43f},
             new float[] { -3.53f, -1.53f, 0.5f, 2.5f},
