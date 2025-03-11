@@ -5,6 +5,8 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Data")]
 public class LevelData : ScriptableObject
 {
+    public int winCondition;
+
     public GameObject background;
     public Vector2 gridSize;
     public Vector2 incrementAmount;

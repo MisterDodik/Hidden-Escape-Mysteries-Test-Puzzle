@@ -11,6 +11,7 @@ public class ButtonScript : MonoBehaviour
 
     Vector2 gridOrigin; //ovo neka izvadi iz skriptable objekta isto
     Vector2 incrementAmount;     //i ovo
+    Vector2 gridSize;
 
     [SerializeField] private GameObject skullObjectPrefab;
     Transform skullParent;
@@ -19,7 +20,8 @@ public class ButtonScript : MonoBehaviour
     Vector2 orienation;
     Transform spawnPosition;
 
-    [HideInInspector]public LevelData.ButtonData buttonData;
+    //[HideInInspector]public LevelData.ButtonData buttonData;
+    LevelData.ButtonData buttonData;
 
     [SerializeField] private Transform buttonDark;
     [SerializeField] private GameObject buttonEmpty;
@@ -33,8 +35,8 @@ public class ButtonScript : MonoBehaviour
         GetComponent<SpriteRenderer>().sprite = buttonData.sprite;
 
         skullParent = SecretDoorPuzzleManager.instance.skullParent;
-        gridOrigin = SecretDoorPuzzleManager.instance.gridOrigin;
-        incrementAmount = SecretDoorPuzzleManager.instance.incrementAmount;
+        //gridOrigin = SecretDoorPuzzleManager.instance.gridOrigin;
+        //incrementAmount = SecretDoorPuzzleManager.instance.incrementAmount;
 
         buttonPosition = gridOrigin + incrementAmount * gridCoordintates;
         transform.localPosition = buttonPosition;
@@ -53,18 +55,26 @@ public class ButtonScript : MonoBehaviour
         
         spawnPosition.localPosition = incrementAmount * orienation;
     }
+
+    public void GetInitValues(int index, LevelData currentLevel)
+    {
+        buttonData = currentLevel.buttonData[index];
+
+        incrementAmount = currentLevel.incrementAmount;
+        gridOrigin = currentLevel.gridOrigin;
+        gridSize = currentLevel.gridSize;
+    }
+
     private void OnMouseDown()
     {
         if (skullNumber == 0)
         {
-            print("Nema vise");
             return;
         }
         if (canBeSpawned())
-        {
-           
+        {        
             GameObject spawned = Instantiate(skullObjectPrefab, skullParent);
-            spawned.transform.localPosition = transform.position; // This might cause offset
+            spawned.transform.localPosition = transform.position; 
 
             StartCoroutine(MoveBlocks(spawned, spawnPosition.position));
 
@@ -74,6 +84,9 @@ public class ButtonScript : MonoBehaviour
                 Instantiate(buttonEmpty, transform);
             }
             changeSprite();
+
+           
+
         }
     }
     void changeSprite()
@@ -90,7 +103,6 @@ public class ButtonScript : MonoBehaviour
     {
         List<GameObject> blocksToMove = new List<GameObject>();
 
-        // Find blocks in the way and move them
         Vector2 checkPosition = targetPosition;
 
         int index = 1;
@@ -108,6 +120,9 @@ public class ButtonScript : MonoBehaviour
 
         // Move new block into position
         yield return StartCoroutine(AnimateMove(newBlock, Vector2.zero));
+
+        yield return new WaitForSeconds(0.1f);
+        SecretDoorPuzzleManager.instance.updateProgress();
     }
 
     IEnumerator AnimateMove(GameObject block, Vector2 direction)
@@ -115,7 +130,7 @@ public class ButtonScript : MonoBehaviour
         Vector2 startPos = block.transform.localPosition;
         Vector2 endPos = (Vector2)spawnPosition.position + direction;
         float elapsedTime = 0f;
-        float moveDuration = 1f;
+        float moveDuration = 0.25f;
 
         while (elapsedTime < moveDuration)
         {
@@ -124,7 +139,7 @@ public class ButtonScript : MonoBehaviour
             yield return null;
         }
 
-        block.transform.localPosition = endPos; // Ensuring it snaps exactly
+        block.transform.localPosition = endPos; 
     }
 
     bool IsBlockAtPosition(Vector3 position)
@@ -139,7 +154,7 @@ public class ButtonScript : MonoBehaviour
     }
     bool canBeSpawned()
     {  
-        for (int i = 1; i < 6 - 1; i++)
+        for (int i = 1; i < gridSize.x - 1; i++)
         {           
             Vector2 cellCenter = buttonPosition + incrementAmount * i * orienation;
 
@@ -153,12 +168,10 @@ public class ButtonScript : MonoBehaviour
 
             if (hit == null)
             {
-                print("Ima slobodnog");
                 return true;
             }
             
         }
-        print("Nema slobodnog");
         return false;
     }
 }

@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class SecretDoorPuzzleManager : MonoBehaviour
 {
-    [SerializeField] LevelData level1Data;
-    [SerializeField] LevelData level2Data;
-    [SerializeField] LevelData level3Data;
-    LevelData currentLevel;
+    [SerializeField] List<LevelData> levels;
+
+    int currentLevel = 0;
+    int currentProgress = 0;
+    int winCon;
 
     [HideInInspector] public Vector2 gridOrigin;
     [HideInInspector] public Vector2 gridSize;
@@ -27,6 +28,8 @@ public class SecretDoorPuzzleManager : MonoBehaviour
 
     GameObject currentBackground;
 
+    [SerializeField] Animator animator;
+
     public static SecretDoorPuzzleManager instance;
     private void Awake()
     {
@@ -36,7 +39,7 @@ public class SecretDoorPuzzleManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Init(level3Data);
+        Init(levels[currentLevel]);
     }
     void clearScene()
     {
@@ -54,12 +57,13 @@ public class SecretDoorPuzzleManager : MonoBehaviour
         {
             Destroy(child.gameObject);
         }
+
+        currentProgress = 0;
+        winCon = levels[currentLevel].winCondition;
     }
     void Init(LevelData data)
     {
         clearScene();
-        
-        currentLevel = data;
 
         incrementAmount = data.incrementAmount;
         gridOrigin = data.gridOrigin;
@@ -84,31 +88,31 @@ public class SecretDoorPuzzleManager : MonoBehaviour
                 data.buttonData[i].sprite = buttonThree;
 
 
-            spawned.GetComponent<ButtonScript>().buttonData = data.buttonData[i];
+            //spawned.GetComponent<ButtonScript>().buttonData = data.buttonData[i];
+            spawned.GetComponent<ButtonScript>().GetInitValues(i, levels[currentLevel]);
         }
     }
     public void resetLevel()
     {
-        Init(currentLevel);
+        Init(levels[currentLevel]);
     }
+    public void updateProgress()
+    {
+        currentProgress++;
 
-    //public void CheckGridOccupancy()
-    //{
-    //    for (int row = 0; row < gridSize.x; row++)
-    //    {
-    //        for (int col = 0; col < gridSize.y; col++)
-    //        {
-    //            Vector2 cellCenter = gridOrigin + incrementAmount * new Vector2(row, col);
+        if (currentProgress < winCon)
+            return;
 
-    //            Collider2D hit = Physics2D.OverlapBox(cellCenter, new Vector2(0.1f, 0.1f), 0);
-
-    //            if (hit == null)
-    //            {
-    //                return;
-    //            }
-    //        }
-    //    }
-    //}
+        currentLevel++;
+        if (currentLevel < levels.Count)
+            Init(levels[currentLevel]);
+        else
+            EndGame();
+    }
+    void EndGame()
+    {
+        animator.SetTrigger("isOver");
+    }
 }
 
 public enum SpawnDirection
