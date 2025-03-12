@@ -4,27 +4,27 @@ using UnityEngine;
 
 public class ButtonScript : MonoBehaviour
 {
-    //Podaci iz skriptabl objekta
+    // Current Button Data
     SpawnDirection spawnDirection;  
     int skullNumber = 1;
-    Vector2 gridCoordintates;
+    Vector2 gridCoordintates;       //position relative to the grid (represented as (row, col))
 
-    Vector2 gridOrigin; //ovo neka izvadi iz skriptable objekta isto
-    Vector2 incrementAmount;     //i ovo
-    Vector2 gridSize;
+    LevelData.ButtonData buttonData;
+    Vector2 buttonPosition;         //the actual position of the object in the scene
+    Vector2 orienation;             //will the skull object be spawned left, right, above or below
+    Transform spawnPosition;        //place where the new skull objects will be spawned
 
+    // Current Level Data
+    Vector2 gridOrigin;
+    Vector2 incrementAmount;        //distance between two cells in the grid
+    Vector2 gridSize;               //eg 4x4
+
+    // General Objects
     [SerializeField] private GameObject skullObjectPrefab;
     Transform skullParent;
 
-    Vector2 buttonPosition;
-    Vector2 orienation;
-    Transform spawnPosition;
-
-    //[HideInInspector]public LevelData.ButtonData buttonData;
-    LevelData.ButtonData buttonData;
-
-    [SerializeField] private Transform buttonDark;
-    [SerializeField] private GameObject buttonEmpty;
+    [SerializeField] private Transform buttonDark;  // Number Cover
+    [SerializeField] private GameObject buttonEmpty;   // Button Overlay
 
     private void Start()
     {
@@ -32,11 +32,9 @@ public class ButtonScript : MonoBehaviour
         skullNumber = buttonData.amount;
         gridCoordintates = buttonData.buttonCoordinates;
 
-        GetComponent<SpriteRenderer>().sprite = buttonData.sprite;
+        GetComponent<SpriteRenderer>().sprite = buttonData.sprite;          // depends on the skullNumber
 
         skullParent = SecretDoorPuzzleManager.instance.skullParent;
-        //gridOrigin = SecretDoorPuzzleManager.instance.gridOrigin;
-        //incrementAmount = SecretDoorPuzzleManager.instance.incrementAmount;
 
         buttonPosition = gridOrigin + incrementAmount * gridCoordintates;
         transform.localPosition = buttonPosition;
@@ -84,11 +82,9 @@ public class ButtonScript : MonoBehaviour
                 Instantiate(buttonEmpty, transform);
             }
             changeSprite();
-
-           
-
         }
     }
+    // Adds number covers
     void changeSprite()
     {
         Transform darkSpawned = Instantiate(buttonDark, transform).transform;
@@ -101,7 +97,7 @@ public class ButtonScript : MonoBehaviour
     }
     IEnumerator MoveBlocks(GameObject newBlock, Vector3 targetPosition)
     {
-        List<GameObject> blocksToMove = new List<GameObject>();
+        List<GameObject> blocksToMove = new List<GameObject>();     // All blocks in the same row/column
 
         Vector2 checkPosition = targetPosition;
 

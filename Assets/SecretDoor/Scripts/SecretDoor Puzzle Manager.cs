@@ -6,6 +6,7 @@ public class SecretDoorPuzzleManager : MonoBehaviour
 {
     [SerializeField] List<LevelData> levels;
 
+    GameObject currentBackground;
     int currentLevel = 0;
     int currentProgress = 0;
     int winCon;
@@ -26,9 +27,8 @@ public class SecretDoorPuzzleManager : MonoBehaviour
     [SerializeField] Sprite buttonTwo;
     [SerializeField] Sprite buttonThree;
 
-    GameObject currentBackground;
-
     [SerializeField] Animator animator;
+
 
     public static SecretDoorPuzzleManager instance;
     private void Awake()
@@ -79,7 +79,6 @@ public class SecretDoorPuzzleManager : MonoBehaviour
         {
             GameObject spawned = Instantiate(buttonPrefab, buttonParent);
 
-
             if (data.buttonData[i].amount == 1)
                 data.buttonData[i].sprite = buttonOne;
             else if (data.buttonData[i].amount == 2)
@@ -87,8 +86,6 @@ public class SecretDoorPuzzleManager : MonoBehaviour
             else if (data.buttonData[i].amount == 3)
                 data.buttonData[i].sprite = buttonThree;
 
-
-            //spawned.GetComponent<ButtonScript>().buttonData = data.buttonData[i];
             spawned.GetComponent<ButtonScript>().GetInitValues(i, levels[currentLevel]);
         }
     }
