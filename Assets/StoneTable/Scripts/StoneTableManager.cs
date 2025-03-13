@@ -14,8 +14,7 @@ public class StoneTableManager : MonoBehaviour
 
     public DiscData data;
 
-    CollisionChecks[] circleCollision;
-    Collider2D[] colliders;
+    List<Collider2D> buttons;
     bool toggleCollision = true;
 
     bool toggleButton = true;
@@ -36,9 +35,6 @@ public class StoneTableManager : MonoBehaviour
         InitPuzzle();
 
         circleCount = data.discCount + 1; //plus 1 central
-
-        circleCollision = FindObjectsByType<CollisionChecks>(FindObjectsSortMode.None);
-        colliders = FindObjectsByType<Collider2D>(FindObjectsSortMode.None);
     }
     void InitPuzzle()
     {
@@ -55,6 +51,8 @@ public class StoneTableManager : MonoBehaviour
 
             spawned.transform.localPosition = spawnPosition;
             spawned.transform.localEulerAngles = new Vector3(0, 0, angle);
+
+            buttons.Add(spawned.GetComponent<Collider2D>());
         }
 
 
@@ -65,7 +63,6 @@ public class StoneTableManager : MonoBehaviour
 
             float angle = i * angleStep;
             float radians = angle * Mathf.Deg2Rad;
-            print(angle);
             Vector2 spawnPosition = new Vector2(data.circleDist * Mathf.Cos(radians + data.circleAngularOffset), data.circleDist * Mathf.Sin(radians + data.circleAngularOffset));
 
             spawned.transform.localPosition = spawnPosition;
@@ -74,18 +71,6 @@ public class StoneTableManager : MonoBehaviour
         }
         Instantiate(centerCirclePrefab, new Vector3(0,0,0), Quaternion.identity, circleParent);
     }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -100,10 +85,10 @@ public class StoneTableManager : MonoBehaviour
     public void Rotate(int buttonIndex)
     {
         currentButton = buttonParent.GetChild(buttonIndex).gameObject;
-        //toggleButtonActivity();
+        toggleButtonActivity();
 
         Circles circles = GetCircles(buttonIndex);
-        StartCoroutine(RotateOverTime(circles.circle1, circles.circle2, circles.centerCircle, buttonIndex));
+        StartCoroutine(RotateOverTime(circles, buttonIndex));
     }
 
     Circles GetCircles(int index)
@@ -116,12 +101,16 @@ public class StoneTableManager : MonoBehaviour
         };
     }
 
-    IEnumerator RotateOverTime(Transform circle1, Transform circle2, Transform centerCircle, int index)
+    IEnumerator RotateOverTime(Circles circles, int index)
     {
-        toggleCollisionChecks();
+        toggleCollisionChecks(circles);
 
         pressedTriangle.SetActive(true);
         pressedTriangle.transform.localRotation = Quaternion.Euler(0, 0, (index - 3) * 45);
+
+        Transform circle1 = circles.circle1;
+        Transform circle2 = circles.circle2;
+        Transform centerCircle = circles.centerCircle;
 
         float elapsedTime = 0f;
         Vector3 circle1Pos = circle1.localPosition;
@@ -154,39 +143,41 @@ public class StoneTableManager : MonoBehaviour
 
         pressedTriangle.SetActive(false);
         yield return new WaitForSeconds(0.1f);
-        toggleCollisionChecks();
-        //toggleButtonActivity();
-        //checksRays();
+        toggleCollisionChecks(circles);
+        toggleButtonActivity();
         //Win();
     }
 
-    void toggleCollisionChecks()
+    void toggleCollisionChecks(Circles circles)
     {
         toggleCollision = !toggleCollision;
-        //foreach (CollisionChecks circle in circleCollision)
-        //{
-        //    circle.enabled = toggleCollision;
-        //}
-
-        foreach (Collider2D circle in colliders)
+        foreach(BoxCollider2D collider in circles.circle1.GetComponentsInChildren<BoxCollider2D>())
         {
-            circle.enabled = toggleCollision;
+            collider.enabled = toggleCollision;
         }
+        foreach (BoxCollider2D collider in circles.circle2.GetComponentsInChildren<BoxCollider2D>())
+        {
+            collider.enabled = toggleCollision;
+        }
+        foreach (BoxCollider2D collider in circles.centerCircle.GetComponentsInChildren<BoxCollider2D>())
+        {
+            collider.enabled = toggleCollision;
+        }
+
     }
     // Once a button is pressed, all the other get disabled for a brief time, and the pressed button changes its sprite
-    //void toggleButtonActivity()
-    //{
-    //    toggleButton = !toggleButton;
-    //    if (toggleButton)
-    //        currentButton.GetComponent<SpriteRenderer>().sprite = enableSprite;
-    //    else
-    //        currentButton.GetComponent<SpriteRenderer>().sprite = disableSprite;
-    //    foreach (CircleCollider2D button in buttons)
-    //    {
-    //        button.enabled = toggleButton;
-    //    }
-
-    //}
+    void toggleButtonActivity()
+    {
+        toggleButton = !toggleButton;
+        if (toggleButton)
+            currentButton.GetComponent<SpriteRenderer>().sprite = data.enableSprite;
+        else
+            currentButton.GetComponent<SpriteRenderer>().sprite = data.disableSprite;
+        foreach (CircleCollider2D button in buttons)
+        {
+            button.enabled = toggleButton;
+        }
+    }
 
     //// Changes from beam to glow and vice versa
     //void checksRays()

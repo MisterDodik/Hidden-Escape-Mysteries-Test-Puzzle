@@ -7,6 +7,9 @@ public class DiscData : ScriptableObject
     public Sprite glowSprite;
     public Sprite beamSprite;
 
+    public Sprite enableSprite;
+    public Sprite disableSprite;
+
     public int discCount;
     public float circleAngularOffset;
     public float circleDist;

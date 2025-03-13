@@ -18,7 +18,6 @@ public class CollisionChecks : MonoBehaviour
     }
     private void OnTriggerStay2D(Collider2D collision)
     {
-        print("evo ga");
         Button button = collision.gameObject.GetComponent<Button>();
         if (button != null)
         {
