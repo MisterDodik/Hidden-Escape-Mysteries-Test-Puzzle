@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ButtonClickHandler : MonoBehaviour
+public class Button : MonoBehaviour
 {
     private int buttonIndex;
 
@@ -13,6 +13,6 @@ public class ButtonClickHandler : MonoBehaviour
 
     private void OnMouseDown()
     {
-       PuzzleManager.instance.Rotate(buttonIndex);
+        StoneTableManager.instance.Rotate(buttonIndex);
     }
 }
