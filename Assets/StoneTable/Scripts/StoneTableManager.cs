@@ -14,15 +14,20 @@ public class StoneTableManager : MonoBehaviour
 
     public DiscData data;
 
-    List<Collider2D> buttons;
+    List<CheckWin> circles = new List<CheckWin>();
     bool toggleCollision = true;
-
     bool toggleButton = true;
 
+    [HideInInspector] public bool moveInProgress = false;
+
     GameObject currentButton;
-    [SerializeField]GameObject pressedTriangle;
+    [SerializeField] GameObject pressedTriangle;
     float duration = 1.5f;
     int circleCount;
+
+    int winCondition = 8;
+    int winProgress = 0;
+    [SerializeField] private Animator animator;
 
     public static StoneTableManager instance;
     private void Awake()
@@ -33,7 +38,6 @@ public class StoneTableManager : MonoBehaviour
     private void Start()
     {
         InitPuzzle();
-
         circleCount = data.discCount + 1; //plus 1 central
     }
     void InitPuzzle()
@@ -41,18 +45,16 @@ public class StoneTableManager : MonoBehaviour
         float angleStep = 360 / data.discCount;
 
         // Spawning Buttons
-        for (int i=0; i<data.discCount; i++)
+        for (int i = 0; i < data.discCount; i++)
         {
             GameObject spawned = Instantiate(buttonPrefab, buttonParent);
 
-            float angle = -135 + i * angleStep;  
+            float angle = -135 + i * angleStep;
             float radians = angle * Mathf.Deg2Rad;
             Vector2 spawnPosition = new Vector2(data.buttonDist * Mathf.Cos(radians), data.buttonDist * Mathf.Sin(radians));
 
             spawned.transform.localPosition = spawnPosition;
             spawned.transform.localEulerAngles = new Vector3(0, 0, angle);
-
-            buttons.Add(spawned.GetComponent<Collider2D>());
         }
 
 
@@ -68,12 +70,47 @@ public class StoneTableManager : MonoBehaviour
             spawned.transform.localPosition = spawnPosition;
 
             spawned.transform.GetChild(0).localEulerAngles = new Vector3(0, 0, data.circleAngles[i]);
+
+            // Same concept as before, just automated this time
+            CheckWin check = spawned.GetComponent<CheckWin>();
+            check.winPosition = data.circleWinPos[i];
+            circles.Add(check);
         }
-        Instantiate(centerCirclePrefab, new Vector3(0,0,0), Quaternion.identity, circleParent);
+
+        GameObject center = Instantiate(centerCirclePrefab, new Vector3(0, 0, 0), Quaternion.identity, circleParent);
+        CheckWin centerCheck = center.GetComponent<CheckWin>();
+        centerCheck.winPosition = data.circleWinPos[data.discCount];
+        circles.Add(centerCheck);
+
+
+        //for (int i = 0; i < data.discCount; i++)
+        //{
+        //    SpawnCircle(i, circlePrefab, circleParent);
+        //}
+
+        //// Spawn center circle
+        //SpawnCircle(data.discCount, centerCirclePrefab, circleParent);
     }
 
+    //void SpawnCircle(int index, GameObject prefab, Transform parent)
+    //{
+    //    GameObject spawned = Instantiate(prefab, parent);
 
+    //    float angle = index * angleStep;
+    //    float radians = angle * Mathf.Deg2Rad;
+    //    Vector2 spawnPosition = new Vector2(
+    //        data.circleDist * Mathf.Cos(radians + data.circleAngularOffset),
+    //        data.circleDist * Mathf.Sin(radians + data.circleAngularOffset)
+    //    );
 
+    //    spawned.transform.localPosition = spawnPosition;
+    //    spawned.transform.GetChild(0).localRotation = Quaternion.Euler(0, 0, data.circleAngles[index]);
+
+    //    CheckWin check = spawned.GetComponent<CheckWin>();
+    //    check.winPosition = data.circleWinPos[index];
+    //    circles.Add(check);
+    //}
+    
 
     struct Circles
     {
@@ -103,6 +140,8 @@ public class StoneTableManager : MonoBehaviour
 
     IEnumerator RotateOverTime(Circles circles, int index)
     {
+        moveInProgress = true;
+
         toggleCollisionChecks(circles);
 
         pressedTriangle.SetActive(true);
@@ -145,7 +184,9 @@ public class StoneTableManager : MonoBehaviour
         yield return new WaitForSeconds(0.1f);
         toggleCollisionChecks(circles);
         toggleButtonActivity();
-        //Win();
+        Win();
+
+        moveInProgress = false;
     }
 
     void toggleCollisionChecks(Circles circles)
@@ -173,34 +214,21 @@ public class StoneTableManager : MonoBehaviour
             currentButton.GetComponent<SpriteRenderer>().sprite = data.enableSprite;
         else
             currentButton.GetComponent<SpriteRenderer>().sprite = data.disableSprite;
-        foreach (CircleCollider2D button in buttons)
-        {
-            button.enabled = toggleButton;
-        }
     }
 
-    //// Changes from beam to glow and vice versa
-    //void checksRays()
-    //{
-    //    foreach (RayDetection ray in rays)
-    //    {
-    //        ray.testRay();
-    //    }
-    //}
+    // Called every time the button is pressed to check if the win condition is met
+    void Win()
+    {
+        winProgress = 0;
 
-    //// Called every time the button is pressed to check if the win condition is met
-    //void Win()
-    //{
-    //    winProgress = 0;
-
-    //    foreach (CheckWin circle in circles)
-    //    {
-    //        winProgress += circle.GetPosition();
-    //    }
-    //    if (winProgress >= winCondition)
-    //    {
-    //        toggleButtonActivity();
-    //        animator.SetTrigger("isOver");
-    //    }
-    //}
+        foreach (CheckWin circle in circles)
+        {
+            winProgress += circle.GetPosition();
+        }
+        if (winProgress >= winCondition)
+        {
+            toggleButtonActivity();
+            animator.SetTrigger("isOver");
+        }
+    }
 }

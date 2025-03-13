@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class CollisionChecks : MonoBehaviour
 {
-    Button currentHover;
-
     SpriteRenderer spriteRenderer;
     Sprite glowSprite;
     Sprite beamSprite;
@@ -18,23 +16,15 @@ public class CollisionChecks : MonoBehaviour
     }
     private void OnTriggerStay2D(Collider2D collision)
     {
-        Button button = collision.gameObject.GetComponent<Button>();
+        ReformedButtonScript button = collision.gameObject.GetComponent<ReformedButtonScript>();
         if (button != null)
-        {
-            currentHover = button;
             spriteRenderer.sprite = beamSprite;
-        }
 
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        Button button = collision.gameObject.GetComponent<Button>();
-        if (button == currentHover)
-        {
-            currentHover = null;
-            spriteRenderer.sprite = glowSprite;
-        }
+        spriteRenderer.sprite = glowSprite;
 
     }
 }

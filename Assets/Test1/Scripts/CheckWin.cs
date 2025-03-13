@@ -6,7 +6,7 @@ public class CheckWin : MonoBehaviour
 {
     bool wasAtCorrectPlace = false;
 
-    [SerializeField] private int winPosition;           // Each circle has its correct position, ie silingIndex
+    public int winPosition;           // Each circle has its correct position, ie siblingIndex
 
     private void Start()
     {

@@ -14,6 +14,7 @@ public class DiscData : ScriptableObject
     public float circleAngularOffset;
     public float circleDist;
     public List<float> circleAngles;
+    public List<int> circleWinPos;
 
     public float buttonDist;
 }
