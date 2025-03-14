@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class StoneTableManager : MonoBehaviour
 {
+    public DiscData data;
     [SerializeField] GameObject centerCirclePrefab;
     [SerializeField] GameObject circlePrefab;
     [SerializeField] GameObject buttonPrefab;
@@ -12,9 +13,10 @@ public class StoneTableManager : MonoBehaviour
     [SerializeField] Transform circleParent;
     [SerializeField] Transform buttonParent;
 
-    public DiscData data;
+    float angleStep;
+    int circleCount;
 
-    List<CheckWin> circles = new List<CheckWin>();
+    List<CheckWinRefactor> circles = new List<CheckWinRefactor>();
     bool toggleCollision = true;
     bool toggleButton = true;
 
@@ -23,7 +25,6 @@ public class StoneTableManager : MonoBehaviour
     GameObject currentButton;
     [SerializeField] GameObject pressedTriangle;
     float duration = 1.5f;
-    int circleCount;
 
     int winCondition = 8;
     int winProgress = 0;
@@ -42,7 +43,7 @@ public class StoneTableManager : MonoBehaviour
     }
     void InitPuzzle()
     {
-        float angleStep = 360 / data.discCount;
+        angleStep = 360 / data.discCount;
 
         // Spawning Buttons
         for (int i = 0; i < data.discCount; i++)
@@ -72,45 +73,22 @@ public class StoneTableManager : MonoBehaviour
             spawned.transform.GetChild(0).localEulerAngles = new Vector3(0, 0, data.circleAngles[i]);
 
             // Same concept as before, just automated this time
-            CheckWin check = spawned.GetComponent<CheckWin>();
-            check.winPosition = data.circleWinPos[i];
-            circles.Add(check);
+            ModifyCheckWin(i, spawned);
         }
 
         GameObject center = Instantiate(centerCirclePrefab, new Vector3(0, 0, 0), Quaternion.identity, circleParent);
-        CheckWin centerCheck = center.GetComponent<CheckWin>();
-        centerCheck.winPosition = data.circleWinPos[data.discCount];
-        circles.Add(centerCheck);
+        ModifyCheckWin(data.discCount, center);
 
 
-        //for (int i = 0; i < data.discCount; i++)
-        //{
-        //    SpawnCircle(i, circlePrefab, circleParent);
-        //}
-
-        //// Spawn center circle
-        //SpawnCircle(data.discCount, centerCirclePrefab, circleParent);
     }
 
-    //void SpawnCircle(int index, GameObject prefab, Transform parent)
-    //{
-    //    GameObject spawned = Instantiate(prefab, parent);
+    void ModifyCheckWin(int index, GameObject spawned)
+    {
+        CheckWinRefactor check = spawned.GetComponent<CheckWinRefactor>();
+        check.winPosition = data.circleWinPos[index];
+        circles.Add(check);
+    }
 
-    //    float angle = index * angleStep;
-    //    float radians = angle * Mathf.Deg2Rad;
-    //    Vector2 spawnPosition = new Vector2(
-    //        data.circleDist * Mathf.Cos(radians + data.circleAngularOffset),
-    //        data.circleDist * Mathf.Sin(radians + data.circleAngularOffset)
-    //    );
-
-    //    spawned.transform.localPosition = spawnPosition;
-    //    spawned.transform.GetChild(0).localRotation = Quaternion.Euler(0, 0, data.circleAngles[index]);
-
-    //    CheckWin check = spawned.GetComponent<CheckWin>();
-    //    check.winPosition = data.circleWinPos[index];
-    //    circles.Add(check);
-    //}
-    
 
     struct Circles
     {
@@ -221,7 +199,7 @@ public class StoneTableManager : MonoBehaviour
     {
         winProgress = 0;
 
-        foreach (CheckWin circle in circles)
+        foreach (CheckWinRefactor circle in circles)
         {
             winProgress += circle.GetPosition();
         }
