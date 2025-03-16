@@ -7,7 +7,7 @@ public class SkullObjectPool : MonoBehaviour
     public GameObject prefab;
     public int poolSize = 21;
 
-    private Queue<GameObject> pool = new Queue<GameObject>();
+    private Stack<GameObject> pool = new Stack<GameObject>(); 
 
     public static SkullObjectPool instance;
 
@@ -26,7 +26,7 @@ public class SkullObjectPool : MonoBehaviour
         {
             GameObject obj = Instantiate(prefab, skullParent);
             obj.SetActive(false);
-            pool.Enqueue(obj);
+            pool.Push(obj);
         }
     }
 
@@ -35,7 +35,7 @@ public class SkullObjectPool : MonoBehaviour
         GameObject obj;
         if (pool.Count > 0)
         {
-            obj = pool.Dequeue();
+            obj = pool.Pop();
         }
         else
         {
@@ -48,7 +48,7 @@ public class SkullObjectPool : MonoBehaviour
     public void ReturnObject(GameObject obj)
     {
         obj.SetActive(false);
-        pool.Enqueue(obj);
+        pool.Push(obj);
     }
 
     public void ReturnAllObjects() 
