@@ -70,8 +70,9 @@ public class ButtonScript : MonoBehaviour
             return;
         }
         if (canBeSpawned())
-        {        
-            GameObject spawned = Instantiate(skullObjectPrefab, skullParent);
+        {
+            //GameObject spawned = Instantiate(skullObjectPrefab, skullParent);
+            GameObject spawned = SkullObjectPool.instance.GetObject();
             spawned.transform.localPosition = transform.position; 
 
             StartCoroutine(MoveBlocks(spawned, spawnPosition.position));

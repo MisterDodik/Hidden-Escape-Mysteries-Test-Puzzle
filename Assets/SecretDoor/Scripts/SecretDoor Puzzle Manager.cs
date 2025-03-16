@@ -7,7 +7,7 @@ public class SecretDoorPuzzleManager : MonoBehaviour
     [SerializeField] List<LevelData> levels;
 
     GameObject currentBackground;
-    int currentLevel = 0;
+    public int currentLevel = 0;        //stavi private
     int currentProgress = 0;
     int winCon;
 
@@ -53,10 +53,11 @@ public class SecretDoorPuzzleManager : MonoBehaviour
         {
             Destroy(child.gameObject);
         }
-        foreach (Transform child in skullParent)
-        {
-            Destroy(child.gameObject);
-        }
+        //foreach (Transform child in skullParent)
+        //{
+        //    Destroy(child.gameObject);
+        //}
+        SkullObjectPool.instance.ReturnAllObjects();
 
         currentProgress = 0;
         winCon = levels[currentLevel].winCondition;
