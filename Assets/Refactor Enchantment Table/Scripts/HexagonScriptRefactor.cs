@@ -16,6 +16,7 @@ public class HexagonScriptRefactor : MonoBehaviour
     Collider2D selfCollider;
 
     bool wasCorrect = false;
+
     private void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -56,16 +57,10 @@ public class HexagonScriptRefactor : MonoBehaviour
         {
             item.enabled = false;
             item.gameObject.GetComponent<SpriteRenderer>().enabled = false;
-           //item.gameObject.GetComponent<PathScriptRefactor>().isPathLightSource = false;
         }
-        //foreach(var item in FindObjectsByType<TriangleLogicsRefactor>(FindObjectsSortMode.None))
-        //{
-        //    item.wait = true;
-        //}
-        foreach (var item in Physics2D.OverlapCircleAll(transform.position, 1.6f, 64))
-        {
-            item.gameObject.GetComponent<PathScriptRefactor>().wait = true;
-        }
+
+        EnchantmentTableManagerRefactor.instance.moveInProgress = true;
+        
         // hexagon rotation
         float elapsedTime = 0f;
 
@@ -81,23 +76,16 @@ public class HexagonScriptRefactor : MonoBehaviour
         }
         transform.localRotation = endRotation;
 
-        //yield return new WaitForSeconds(0.5f);
         // re-enabling surrounding colliders
         selfCollider.enabled = true;
 
         foreach (BoxCollider2D item in surroundingPaths)
         {
             item.enabled = true;
-            //item.GetComponent<PathScriptRefactor>().isPathLightSource = false;
         }
-        //foreach (var item in FindObjectsByType<TriangleLogicsRefactor>(FindObjectsSortMode.None))
-        //{
-        //    item.wait = false;
-        //}
-        foreach (var item in Physics2D.OverlapCircleAll(transform.position, 1.6f, 64))
-        {
-            item.gameObject.GetComponent<PathScriptRefactor>().wait = false;
-        }
+
+        EnchantmentTableManagerRefactor.instance.moveInProgress = false;
+
     }
     public void CheckState(bool isCorrect)
     {

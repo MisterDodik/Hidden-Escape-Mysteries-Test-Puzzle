@@ -146,6 +146,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   wait: 0
   isPathLightSource: 0
+  test: 0
 --- !u!50 &-6070270950219449008
 Rigidbody2D:
   serializedVersion: 4

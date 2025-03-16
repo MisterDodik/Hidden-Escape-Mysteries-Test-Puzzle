@@ -20,7 +20,11 @@ public class EnchantmentTableManagerRefactor : MonoBehaviour
     int winCondition = 18;
     [HideInInspector] int gameProgress = 0;
     
+    [HideInInspector] public bool moveInProgress = false;
+    
+    
     public static EnchantmentTableManagerRefactor instance;
+
     private void Awake()
     {
         if (instance == null)
@@ -50,8 +54,6 @@ public class EnchantmentTableManagerRefactor : MonoBehaviour
             {
                 Vector3 spawnPosition = new Vector3(x, y, 0);
                 GameObject hexagon = (GameObject)Instantiate(hexagonPrefab, spawnPosition, Quaternion.identity, hexagonParent);
-
-              //  hexagon.GetComponent<HexagonScriptRefactor>().GetTriangleData();
 
                 j++;
 

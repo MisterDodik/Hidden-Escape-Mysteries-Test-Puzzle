@@ -1,12 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 public class TriangleLogicsRefactor : MonoBehaviour
 {
-     public bool isLightSource = false;
-    public bool test = false;
-    public bool wait = false;
+    public bool isLightSource = false;
 
     public bool isCenter = false;
     TriangleLogicsRefactor[] siblings;
@@ -16,18 +15,14 @@ public class TriangleLogicsRefactor : MonoBehaviour
         siblings = transform.parent.GetComponentsInChildren<TriangleLogicsRefactor>();
         parentController = transform.parent.GetComponent<HexagonScriptRefactor>();
     }
-    private void Update()
-    {
-        //if(test)
-        //    if (!isLightSource)
-        //        print("ima nade");
-        if (test)
-            print(isLightSource);
-    }
     private void OnTriggerStay2D(Collider2D collision)
     {
-        PathScriptRefactor path = collision.gameObject.GetComponent<PathScriptRefactor>();
-        if (path != null && path.isPathLightSource && !isLightSource) // && currentTriangle!=triangle
+        if (EnchantmentTableManagerRefactor.instance.moveInProgress || isLightSource)   // isLightSource check to improve performance by reducing the number of calls
+            return;
+
+        // Similar to the original version
+        TriangleLogicsRefactor triangle = collision.gameObject.GetComponent<TriangleLogicsRefactor>();
+        if (triangle != null && triangle.isLightSource)       
         {
             for (int i = 0; i < siblings.Length; i++)
             {
@@ -39,28 +34,15 @@ public class TriangleLogicsRefactor : MonoBehaviour
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (isCenter)
+        if (isCenter)       // The center one should always be a light source
             return;
 
-        PathScriptRefactor path = collision.gameObject.GetComponent<PathScriptRefactor>();
-       
-        //if (path)         //ovo ne treba jer se uopste pravi path ne uzima u obzir jer se ne pokrene ova funkcija na tacnom triangleu
-        //{
-        //   // path.CustomOnTriggerExit2D();
-        //   path.wait = true;
-        //}
         for (int i = 0; i < siblings.Length; i++)
         {
             siblings[i].isLightSource = false;
-            if(test)
-                print("cao");
         }
         if (parentController)
             parentController.CheckState(false);
-        //if (path)
-        //{
-        //    // path.CustomOnTriggerExit2D();
-        //    path.wait = false;
-        //}
+
     }
 }

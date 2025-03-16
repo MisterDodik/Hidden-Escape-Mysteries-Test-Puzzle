@@ -286,8 +286,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isLightSource: 1
-  test: 0
-  wait: 0
   isCenter: 1
 --- !u!1 &497368409
 GameObject:
@@ -334,7 +332,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 120856602469147078, guid: 98186a6871ba7b745878954d9186ff4e, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 898490587951216394, guid: 98186a6871ba7b745878954d9186ff4e, type: 3}
       propertyPath: m_IsActive
@@ -716,6 +714,7 @@ MonoBehaviour:
   hexagonShineSprite: {fileID: 21300000, guid: a9c84afb0efa31f4398b3e97a5143888, type: 3}
   defaultHexagonSprite: {fileID: 21300000, guid: 9140e5fa65b9b674296034739c844cc8, type: 3}
   animator: {fileID: 862682462}
+  moveInProgress: 0
 --- !u!1 &1292935626
 GameObject:
   m_ObjectHideFlags: 0
