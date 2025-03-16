@@ -98,6 +98,7 @@ public class ButtonScript : MonoBehaviour
     }
     IEnumerator MoveBlocks(GameObject newBlock, Vector3 targetPosition)
     {
+        yield return null;  
         List<GameObject> blocksToMove = new List<GameObject>();     // All blocks in the same row/column
 
         Vector2 checkPosition = targetPosition;
