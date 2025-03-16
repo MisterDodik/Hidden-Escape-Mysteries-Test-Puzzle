@@ -12,8 +12,15 @@ public class EnchantmentTableManagerRefactor : MonoBehaviour
     [SerializeField] GameObject pathPrefab;
     [SerializeField] Transform pathParent;
 
-    public static EnchantmentTableManagerRefactor instance;
+    public Sprite hexagonShineSprite;
+    public Sprite defaultHexagonSprite;
 
+    // end screen
+    [SerializeField] Animator animator;
+    int winCondition = 18;
+    [HideInInspector] int gameProgress = 0;
+    
+    public static EnchantmentTableManagerRefactor instance;
     private void Awake()
     {
         if (instance == null)
@@ -23,7 +30,15 @@ public class EnchantmentTableManagerRefactor : MonoBehaviour
     {
         Init();
     }
-
+    public void checkWin(int score)
+    {
+        gameProgress += score;
+        if (gameProgress >= winCondition)
+        {
+            animator.SetTrigger("isOver");
+            gameObject.SetActive(false);
+        }
+    }
     void Init()
     {
         // Spawning hexagons

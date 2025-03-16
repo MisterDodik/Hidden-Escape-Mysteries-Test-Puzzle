@@ -10,9 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 983562929692151193}
   - component: {fileID: 5210570919633327636}
-  - component: {fileID: 4191377491365721734}
   - component: {fileID: 3009650488347215670}
-  - component: {fileID: 927256169641299529}
+  - component: {fileID: 4265198488634354137}
+  - component: {fileID: 5751406912099207869}
   m_Layer: 0
   m_Name: Triangle
   m_TagString: Untagged
@@ -87,18 +87,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &4191377491365721734
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 965866709838605990}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8725833d1a1dd9944b173574b82fb790, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!61 &3009650488347215670
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -144,7 +132,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.31, y: 0.1}
   m_EdgeRadius: 0
---- !u!50 &927256169641299529
+--- !u!50 &4265198488634354137
 Rigidbody2D:
   serializedVersion: 4
   m_ObjectHideFlags: 0
@@ -171,3 +159,18 @@ Rigidbody2D:
   m_SleepingMode: 0
   m_CollisionDetection: 1
   m_Constraints: 0
+--- !u!114 &5751406912099207869
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 965866709838605990}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6fe145280b7eaa4f9996e84bdfbe491, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isLightSource: 0
+  wait: 0
+  isCenter: 0

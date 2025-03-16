@@ -51,14 +51,21 @@ public class HexagonScriptRefactor : MonoBehaviour
         // disabling surrounding colliders
         selfCollider.enabled = false;
 
-        Collider2D[] surroundingPaths = Physics2D.OverlapCircleAll(transform.position, 1, 64);
+        Collider2D[] surroundingPaths = Physics2D.OverlapCircleAll(transform.position, 1f, 64);
         foreach (Collider2D item in surroundingPaths)
         {
             item.enabled = false;
             item.gameObject.GetComponent<SpriteRenderer>().enabled = false;
+           //item.gameObject.GetComponent<PathScriptRefactor>().isPathLightSource = false;
         }
-
-
+        //foreach(var item in FindObjectsByType<TriangleLogicsRefactor>(FindObjectsSortMode.None))
+        //{
+        //    item.wait = true;
+        //}
+        foreach (var item in Physics2D.OverlapCircleAll(transform.position, 1.6f, 64))
+        {
+            item.gameObject.GetComponent<PathScriptRefactor>().wait = true;
+        }
         // hexagon rotation
         float elapsedTime = 0f;
 
@@ -74,32 +81,41 @@ public class HexagonScriptRefactor : MonoBehaviour
         }
         transform.localRotation = endRotation;
 
-
+        //yield return new WaitForSeconds(0.5f);
         // re-enabling surrounding colliders
         selfCollider.enabled = true;
 
         foreach (BoxCollider2D item in surroundingPaths)
         {
             item.enabled = true;
+            //item.GetComponent<PathScriptRefactor>().isPathLightSource = false;
+        }
+        //foreach (var item in FindObjectsByType<TriangleLogicsRefactor>(FindObjectsSortMode.None))
+        //{
+        //    item.wait = false;
+        //}
+        foreach (var item in Physics2D.OverlapCircleAll(transform.position, 1.6f, 64))
+        {
+            item.gameObject.GetComponent<PathScriptRefactor>().wait = false;
         }
     }
-    //public void CheckState(bool isCorrect)
-    //{
-    //    if (isCorrect)
-    //    {
-    //        spriteRenderer.sprite = EnchantmentTableManagerRefactor.instance.hexagonShineSprite;
+    public void CheckState(bool isCorrect)
+    {
+        if (isCorrect)
+        {
+            spriteRenderer.sprite = EnchantmentTableManagerRefactor.instance.hexagonShineSprite;
 
-    //        if (!wasCorrect)
-    //            EnchantmentTableManagerRefactor.instance.checkWin(1);
-    //        wasCorrect = true;
-    //    }
-    //    else
-    //    {
-    //        spriteRenderer.sprite = EnchantmentTableManagerRefactor.instance.defaultHexagonSprite;
+            if (!wasCorrect)
+                EnchantmentTableManagerRefactor.instance.checkWin(1);
+            wasCorrect = true;
+        }
+        else
+        {
+            spriteRenderer.sprite = EnchantmentTableManagerRefactor.instance.defaultHexagonSprite;
 
-    //        if (wasCorrect)
-    //            EnchantmentTableManagerRefactor.instance.checkWin(-1);
-    //        wasCorrect = false;
-    //    }
-    //}
+            if (wasCorrect)
+                EnchantmentTableManagerRefactor.instance.checkWin(-1);
+            wasCorrect = false;
+        }
+    }
 }

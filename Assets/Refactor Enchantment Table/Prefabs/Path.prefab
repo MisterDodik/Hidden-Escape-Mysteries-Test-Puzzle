@@ -11,7 +11,8 @@ GameObject:
   - component: {fileID: 7588666060061471421}
   - component: {fileID: 6876478270838954757}
   - component: {fileID: 3777129979304902814}
-  - component: {fileID: 1222425541636737253}
+  - component: {fileID: -1444489184316666927}
+  - component: {fileID: -6070270950219449008}
   m_Layer: 6
   m_Name: Path
   m_TagString: Untagged
@@ -131,7 +132,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.09, y: 0.4}
   m_EdgeRadius: 0
---- !u!114 &1222425541636737253
+--- !u!114 &-1444489184316666927
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -140,6 +141,35 @@ MonoBehaviour:
   m_GameObject: {fileID: 7309605284181533439}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7fbeffc0b71d4144887587ffaa133426, type: 3}
+  m_Script: {fileID: 11500000, guid: e6e2852f0f891124499712aa0e390c7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  wait: 0
+  isPathLightSource: 0
+--- !u!50 &-6070270950219449008
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7309605284181533439}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 0
+  m_CollisionDetection: 1
+  m_Constraints: 0
