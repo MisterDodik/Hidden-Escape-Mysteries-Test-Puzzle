@@ -16,7 +16,7 @@ MonoBehaviour:
   background: {fileID: 4031577663825067926, guid: 295c78953c57abd47b0cc32e0b191216, type: 3}
   gridSize: {x: 6, y: 6}
   incrementAmount: {x: 1.53, y: 1.35}
-  gridOrigin: {x: -3.85, y: -3.25}
+  gridOrigin: {x: -3.97, y: -3.25}
   buttonData:
   - buttonCoordinates: {x: 1, y: 0}
     amount: 1

@@ -19,9 +19,6 @@ public class ButtonScript : MonoBehaviour
     Vector2 incrementAmount;        //distance between two cells in the grid
     Vector2 gridSize;               //eg 4x4
 
-    // General Objects
-    [SerializeField] private GameObject skullObjectPrefab;
-    Transform skullParent;
 
     [SerializeField] private Transform buttonDark;  // Number Cover
     [SerializeField] private GameObject buttonEmpty;   // Button Overlay
@@ -33,8 +30,6 @@ public class ButtonScript : MonoBehaviour
         gridCoordintates = buttonData.buttonCoordinates;
 
         GetComponent<SpriteRenderer>().sprite = buttonData.sprite;          // depends on the skullNumber
-
-        skullParent = SecretDoorPuzzleManager.instance.skullParent;
 
         buttonPosition = gridOrigin + incrementAmount * gridCoordintates;
         transform.localPosition = buttonPosition;

@@ -21,7 +21,7 @@ public class SecretDoorPuzzleManager : MonoBehaviour
     [SerializeField] GameObject buttonPrefab;
     [SerializeField] Transform buttonParent;
     
-    public Transform skullParent;
+    public Transform BGParent;
 
     [SerializeField] Sprite buttonOne;
     [SerializeField] Sprite buttonTwo;
@@ -69,7 +69,7 @@ public class SecretDoorPuzzleManager : MonoBehaviour
         incrementAmount = data.incrementAmount;
         gridOrigin = data.gridOrigin;
 
-        currentBackground = Instantiate(data.background);
+        currentBackground = Instantiate(data.background, BGParent);
 
         for (int i = 0; i < data.barricadeCoordinates.Count; i++)
         {
