@@ -11,10 +11,6 @@ public class SecretDoorPuzzleManager : MonoBehaviour
     int currentProgress = 0;
     int winCon;
 
-    [HideInInspector] public Vector2 gridOrigin;
-    [HideInInspector] public Vector2 gridSize;
-    [HideInInspector] public Vector2 incrementAmount;
-
     [SerializeField] GameObject barricadePrefab;
     [SerializeField] Transform barricadeParent;
 
@@ -31,6 +27,13 @@ public class SecretDoorPuzzleManager : MonoBehaviour
 
 
     public static SecretDoorPuzzleManager instance;
+
+
+    //Grid Values
+    [HideInInspector] public Vector3 blockBounds;
+    [HideInInspector] public Vector2 gridOrigin;
+    [HideInInspector] public Vector3 incrementAmount;
+
     private void Awake()
     {
         if (instance == null)
@@ -39,46 +42,71 @@ public class SecretDoorPuzzleManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Init(levels[currentLevel]);
+        //calculateGridValues();
+        Init(levels[currentLevel], false);
     }
-    void clearScene()
+
+    void calculateGridValues()
     {
+        blockBounds = barricadePrefab.GetComponent<SpriteRenderer>().sprite.rect.size * barricadePrefab.transform.localScale;
+        blockBounds = blockBounds / 100;
+
+        Vector2 gridSize = levels[currentLevel].gridSize;
+        Vector2 gridOffset = levels[currentLevel].background.transform.localPosition;
+        gridOrigin = new Vector2(-(gridSize.x - 1) / 2 * blockBounds.x, -(gridSize.y - 1) / 2 * blockBounds.y) + gridOffset;    // minus because we need the bottom left corner ie (0, 0)
+        incrementAmount = blockBounds;
+    }
+    void clearScene(bool isSameLevel)
+    {
+        if(!isSameLevel)
+            calculateGridValues(); 
+
         if (currentBackground)
             Destroy(currentBackground);
-        foreach (Transform child in barricadeParent)
-        {
-            Destroy(child.gameObject);
-        }
-        foreach (Transform child in buttonParent)
-        {
-            Destroy(child.gameObject);
-        }
-        //foreach (Transform child in skullParent)
+        //foreach (Transform child in barricadeParent)
         //{
-        //    Destroy(child.gameObject);
+        //    child.gameObject.SetActive(false);
+        //}
+        //foreach (Transform child in buttonParent)
+        //{
+        //    child.gameObject.SetActive(false);
         //}
         SkullObjectPool.instance.ReturnAllObjects();
 
         currentProgress = 0;
         winCon = levels[currentLevel].winCondition;
     }
-    void Init(LevelData data)
+    void Init(LevelData data, bool isSameLevel)
     {
-        clearScene();
-
-        incrementAmount = data.incrementAmount;
-        gridOrigin = data.gridOrigin;
+        clearScene(isSameLevel);
 
         currentBackground = Instantiate(data.background, BGParent);
 
         for (int i = 0; i < data.barricadeCoordinates.Count; i++)
-        {
-            GameObject spawned = Instantiate(barricadePrefab, barricadeParent);
-            spawned.transform.localPosition = gridOrigin + incrementAmount * data.barricadeCoordinates[i];
+        { 
+            GameObject barricade;
+            if (i < barricadeParent.childCount)
+            {
+                barricade = barricadeParent.GetChild(i).gameObject;
+                //barricade.SetActive(true);
+            }
+            else 
+                barricade = Instantiate(barricadePrefab, barricadeParent);
+            barricade.transform.localPosition = gridOrigin + incrementAmount * data.barricadeCoordinates[i];
         }
+     
+        
         for (int i = 0; i < data.buttonData.Count; i++)
         {
-            GameObject spawned = Instantiate(buttonPrefab, buttonParent);
+            GameObject button;
+            if (i < buttonParent.childCount)
+            {
+                button = buttonParent.GetChild(i).gameObject;
+                //button.SetActive(true);
+            }
+            else            
+                button = Instantiate(buttonPrefab, buttonParent);
+            
 
             if (data.buttonData[i].amount == 1)
                 data.buttonData[i].sprite = buttonOne;
@@ -87,12 +115,12 @@ public class SecretDoorPuzzleManager : MonoBehaviour
             else if (data.buttonData[i].amount == 3)
                 data.buttonData[i].sprite = buttonThree;
 
-            spawned.GetComponent<ButtonScript>().GetInitValues(i, levels[currentLevel]);
+            button.GetComponent<ButtonScript>().GetInitValues(i, levels[currentLevel], isSameLevel);
         }
     }
     public void resetLevel()
     {
-        Init(levels[currentLevel]);
+        Init(levels[currentLevel], true);
     }
     public void updateProgress()
     {
@@ -103,7 +131,7 @@ public class SecretDoorPuzzleManager : MonoBehaviour
 
         currentLevel++;
         if (currentLevel < levels.Count)
-            Init(levels[currentLevel]);
+            Init(levels[currentLevel], false);
         else
             EndGame();
     }

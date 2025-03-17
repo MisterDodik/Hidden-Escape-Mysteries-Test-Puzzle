@@ -23,10 +23,30 @@ public class ButtonScript : MonoBehaviour
     [SerializeField] private Transform buttonDark;  // Number Cover
     [SerializeField] private GameObject buttonEmpty;   // Button Overlay
 
-    private void Start()
+    public void GetInitValues(int index, LevelData currentLevel, bool isSameLevel)
+    {
+        if (!isSameLevel)      // when we press "reset", then there's no need to reinit the button, because the values are the same
+        {
+            buttonData = currentLevel.buttonData[index];
+            gridSize = currentLevel.gridSize;
+
+            incrementAmount = SecretDoorPuzzleManager.instance.incrementAmount;
+            gridOrigin = SecretDoorPuzzleManager.instance.gridOrigin;
+            initButton();
+        }
+
+        skullNumber = buttonData.amount;
+        destroyIndicators();
+    }
+    void destroyIndicators()
+    {
+        for (int i = 1; i < transform.childCount; i++)
+            Destroy(transform.GetChild(i).gameObject);
+    }
+
+    void initButton()
     {
         spawnDirection = buttonData.spawnDirection;
-        skullNumber = buttonData.amount;
         gridCoordintates = buttonData.buttonCoordinates;
 
         GetComponent<SpriteRenderer>().sprite = buttonData.sprite;          // depends on the skullNumber
@@ -45,17 +65,8 @@ public class ButtonScript : MonoBehaviour
             orienation = new Vector2(1f, 0);
         else if (spawnDirection == SpawnDirection.left)
             orienation = new Vector2(-1f, 0);
-        
+
         spawnPosition.localPosition = incrementAmount * orienation;
-    }
-
-    public void GetInitValues(int index, LevelData currentLevel)
-    {
-        buttonData = currentLevel.buttonData[index];
-
-        incrementAmount = currentLevel.incrementAmount;
-        gridOrigin = currentLevel.gridOrigin;
-        gridSize = currentLevel.gridSize;
     }
 
     private void OnMouseDown()
@@ -168,3 +179,4 @@ public class ButtonScript : MonoBehaviour
         return false;
     }
 }
+
