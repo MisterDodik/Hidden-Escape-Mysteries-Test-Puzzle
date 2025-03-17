@@ -11,8 +11,10 @@ public class ButtonScript : MonoBehaviour
 
     LevelData.ButtonData buttonData;
     Vector2 buttonPosition;         //the actual position of the object in the scene
-    Vector2 orienation;             //will the skull object be spawned left, right, above or below
-    Transform spawnPosition;        //place where the new skull objects will be spawned
+    Vector2 orientation;             //will the skull object be spawned left, right, above or below
+    Vector2 buttonOffset;
+    float buttonScale;
+    Vector3 spawnPosVec;            //place where the new skull objects will be spawned
 
     // Current Level Data
     Vector2 gridOrigin;
@@ -32,6 +34,9 @@ public class ButtonScript : MonoBehaviour
 
             incrementAmount = SecretDoorPuzzleManager.instance.incrementAmount;
             gridOrigin = SecretDoorPuzzleManager.instance.gridOrigin;
+            buttonOffset = SecretDoorPuzzleManager.instance.buttonOffset;
+            buttonScale = SecretDoorPuzzleManager.instance.buttonScale;
+
             initButton();
         }
 
@@ -40,8 +45,10 @@ public class ButtonScript : MonoBehaviour
     }
     void destroyIndicators()
     {
-        for (int i = 1; i < transform.childCount; i++)
-            Destroy(transform.GetChild(i).gameObject);
+        //for (int i = 0; i < transform.childCount; i++)
+        //    Destroy(transform.GetChild(i).gameObject);
+        foreach (Transform child in transform)
+            Destroy(child.gameObject);
     }
 
     void initButton()
@@ -51,22 +58,21 @@ public class ButtonScript : MonoBehaviour
 
         GetComponent<SpriteRenderer>().sprite = buttonData.sprite;          // depends on the skullNumber
 
-        buttonPosition = gridOrigin + incrementAmount * gridCoordintates;
-        transform.localPosition = buttonPosition;
-
-
-        spawnPosition = transform.GetChild(0);
-
         if (spawnDirection == SpawnDirection.up)
-            orienation = new Vector2(0, 1f);
+            orientation = new Vector2(0, 1f);
         else if (spawnDirection == SpawnDirection.down)
-            orienation = new Vector2(0, -1f);
+            orientation = new Vector2(0, -1f);
         else if (spawnDirection == SpawnDirection.right)
-            orienation = new Vector2(1f, 0);
+            orientation = new Vector2(1f, 0);
         else if (spawnDirection == SpawnDirection.left)
-            orienation = new Vector2(-1f, 0);
+            orientation = new Vector2(-1f, 0);
 
-        spawnPosition.localPosition = incrementAmount * orienation;
+        buttonPosition = gridOrigin + incrementAmount * gridCoordintates;
+        transform.localPosition = buttonPosition + buttonOffset * orientation;
+
+        spawnPosVec = buttonPosition + incrementAmount * orientation;
+
+        transform.localScale = new Vector2(buttonScale, buttonScale);
     }
 
     private void OnMouseDown()
@@ -77,11 +83,10 @@ public class ButtonScript : MonoBehaviour
         }
         if (canBeSpawned())
         {
-            //GameObject spawned = Instantiate(skullObjectPrefab, skullParent);
             GameObject spawned = SkullObjectPool.instance.GetObject();
             spawned.transform.localPosition = transform.position; 
 
-            StartCoroutine(MoveBlocks(spawned, spawnPosition.position));
+            StartCoroutine(MoveBlocks(spawned, spawnPosVec));
 
             skullNumber--;
             if(skullNumber == 0)
@@ -113,13 +118,13 @@ public class ButtonScript : MonoBehaviour
         while (IsBlockAtPosition(checkPosition)) // Check for existing blocks
         {
             blocksToMove.Add(GetBlockAtPosition(checkPosition));
-            checkPosition += index * incrementAmount * orienation; // Move check to the next position
+            checkPosition += index * incrementAmount * orientation; // Move check to the next position
         }
 
         // Move all blocks in reverse order
         for (int i = blocksToMove.Count - 1; i >= 0; i--)
         {
-            StartCoroutine(AnimateMove(blocksToMove[i], (i+1) * incrementAmount * orienation));
+            StartCoroutine(AnimateMove(blocksToMove[i], (i+1) * incrementAmount * orientation));
         }
 
         // Move new block into position
@@ -132,7 +137,8 @@ public class ButtonScript : MonoBehaviour
     IEnumerator AnimateMove(GameObject block, Vector2 direction)
     {
         Vector2 startPos = block.transform.localPosition;
-        Vector2 endPos = (Vector2)spawnPosition.position + direction;
+        Vector2 endPos = (Vector2)spawnPosVec + direction;
+
         float elapsedTime = 0f;
         float moveDuration = 0.25f;
 
@@ -160,7 +166,7 @@ public class ButtonScript : MonoBehaviour
     {  
         for (int i = 1; i < gridSize.x - 1; i++)
         {           
-            Vector2 cellCenter = buttonPosition + incrementAmount * i * orienation;
+            Vector2 cellCenter = buttonPosition + incrementAmount * i * orientation;
 
             Collider2D hit = Physics2D.OverlapBox(cellCenter, new Vector2(0.1f, 0.1f), 0);
 
