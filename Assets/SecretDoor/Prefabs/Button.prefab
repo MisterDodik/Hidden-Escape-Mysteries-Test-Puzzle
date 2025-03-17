@@ -135,12 +135,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f2ba9c574034d04898d743d64202328, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skullObjectPrefab: {fileID: 7583111727613265761, guid: e168d84a3982b7a43ac9d82b1fb41a63, type: 3}
-  buttonData:
-    buttonCoordinates: {x: 0, y: 0}
-    amount: 0
-    spawnDirection: 0
-    sprite: {fileID: 0}
   buttonDark: {fileID: 6219177674220095720, guid: 295652365defdf14d916c25639cf6de9, type: 3}
   buttonEmpty: {fileID: 8575790481427950542, guid: 89d24637b5e3b2145a8cd25ecee8fe97, type: 3}
 --- !u!61 &4057955036582010017
@@ -150,7 +144,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2753641707876174983}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
