@@ -9,8 +9,6 @@ public class LevelData : ScriptableObject
 
     public GameObject background;
     public Vector2 gridSize;
-    public Vector2 incrementAmount;
-    public Vector2 gridOrigin;
 
     public List<ButtonData> buttonData;
 
