@@ -11,6 +11,8 @@ public class LevelData : ScriptableObject
     public Vector2 gridSize;
 
     public List<ButtonData> buttonData;
+    public float buttonScale = 1;
+    public Vector2 buttonOffset = Vector2.zero;
 
     public List<Vector2> barricadeCoordinates;
 
