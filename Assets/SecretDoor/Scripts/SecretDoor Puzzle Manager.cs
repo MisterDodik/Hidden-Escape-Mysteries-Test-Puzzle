@@ -7,7 +7,7 @@ public class SecretDoorPuzzleManager : MonoBehaviour
     [SerializeField] List<LevelData> levels;
 
     GameObject currentBackground;
-    public int currentLevel = 0;        //stavi private
+    int currentLevel = 0;      
     int currentProgress = 0;
     int winCon;
 
@@ -68,14 +68,7 @@ public class SecretDoorPuzzleManager : MonoBehaviour
 
         if (currentBackground)
             Destroy(currentBackground);
-        //foreach (Transform child in barricadeParent)
-        //{
-        //    child.gameObject.SetActive(false);
-        //}
-        //foreach (Transform child in buttonParent)
-        //{
-        //    child.gameObject.SetActive(false);
-        //}
+
         SkullObjectPool.instance.ReturnAllObjects();
 
         currentProgress = 0;
@@ -93,7 +86,6 @@ public class SecretDoorPuzzleManager : MonoBehaviour
             if (i < barricadeParent.childCount)
             {
                 barricade = barricadeParent.GetChild(i).gameObject;
-                //barricade.SetActive(true);
             }
             else 
                 barricade = Instantiate(barricadePrefab, barricadeParent);
@@ -107,7 +99,6 @@ public class SecretDoorPuzzleManager : MonoBehaviour
             if (i < buttonParent.childCount)
             {
                 button = buttonParent.GetChild(i).gameObject;
-                //button.SetActive(true);
             }
             else            
                 button = Instantiate(buttonPrefab, buttonParent);
