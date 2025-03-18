@@ -98,8 +98,7 @@ public class ButtonScript : MonoBehaviour
     void changeSprite()
     {
         Transform darkSpawned = Instantiate(buttonDark, transform).transform;
-
-        
+    
         if(buttonData.amount==2)
             darkSpawned.localPosition = new Vector3(-0.125f + 0.2f * skullNumber, 0.015f, 0);
         else if (buttonData.amount == 3)

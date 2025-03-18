@@ -35,6 +35,7 @@ public class SecretDoorPuzzleManager : MonoBehaviour
     [HideInInspector] public Vector3 incrementAmount;
     [HideInInspector] public Vector2 buttonOffset;
     [HideInInspector] public float buttonScale;
+
     private void Awake()
     {
         if (instance == null)
@@ -43,7 +44,6 @@ public class SecretDoorPuzzleManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //calculateGridValues();
         Init(levels[currentLevel], false);
     }
 
@@ -56,8 +56,8 @@ public class SecretDoorPuzzleManager : MonoBehaviour
         Vector2 gridSize = level.gridSize;
         Vector2 gridOffset = level.background.transform.localPosition;
         gridOrigin = new Vector2(-(gridSize.x - 1) / 2 * blockBounds.x, -(gridSize.y - 1) / 2 * blockBounds.y) + gridOffset;    // minus because we need the bottom left corner ie (0, 0)
-        incrementAmount = blockBounds;
 
+        incrementAmount = blockBounds;
         buttonOffset = level.buttonOffset;
         buttonScale = level.buttonScale;
     }
